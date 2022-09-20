@@ -8,4 +8,6 @@ With Docker, spin up the db as a container and spin up the service as a process
 
 * `podman-compose up`
 
+* `export INTERNAL_URL="postgres://twotop:twotop@localhost:5432/twotop"`
+
 * `go run main.go`

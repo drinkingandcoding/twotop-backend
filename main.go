@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -18,7 +19,11 @@ func main() {
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("welcome"))
 	})
-	dsn := "host=localhost user=twotop password=twotop dbname=twotop port=5432"
+	// dsn := "postgres://twotop:twotop@localhost:5432/twotop"
+	dsn, err := getEnv("INTERNAL_URL")
+	if err != nil {
+		panic(err)
+	}
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic(err)
@@ -50,5 +55,14 @@ func main() {
 	servErr := http.ListenAndServe(":3000", r)
 	if servErr != nil {
 		panic(servErr)
+	}
+}
+
+func getEnv(key string) (string, error) {
+	val, ok := os.LookupEnv(key)
+	if !ok {
+		return "", fmt.Errorf("%s not set\n", key)
+	} else {
+		return val, nil
 	}
 }
