@@ -10,7 +10,7 @@ type Recipe struct {
 	Keywords    string        `json:"keywords"`
 	Description string        `json:"description"`
 	Url         string        `json:"url"`
-	Yield       int64         `json:"yield"`
+	Yield       string        `json:"yield"`
 	Ingredients string        `json:"ingredients"`
 	Steps       []Instruction `json:"instructions" gorm:"many2many:instruction_steps"`
 }
