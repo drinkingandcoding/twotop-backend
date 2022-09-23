@@ -25,9 +25,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	db.AutoMigrate(&database.Recipe{})
+	db.AutoMigrate(&database.Recipe{}, &database.Author{}, &database.Instruction{}, &database.Recipe{})
 
-	fmt.Println("Starting server")
+	fmt.Println("Running server")
 	servErr := http.ListenAndServe(":3000", r)
 	if servErr != nil {
 		panic(servErr)
