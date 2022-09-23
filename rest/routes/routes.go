@@ -116,3 +116,38 @@ func getRecipeByID(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(response)
 }
+
+type Filters struct {
+	Keywords   []string `json:"keywords"`
+	Cuisines   []string `json:"cuisine"`
+	Categories []string `json:"category"`
+}
+
+func GetFilters(w http.ResponseWriter, r *http.Request) {
+	recipes := []database.Recipe{}
+	// db query for keywords, cuisines, category
+	validFilters := Filters{}
+	db, err := database.Connect()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = db.Distinct("keywords", "cuisine", "category").Find(&recipes).Error
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	for _, v := range recipes {
+		validFilters.Keywords = append(validFilters.Keywords, v.Keywords...)
+		validFilters.Categories = append(validFilters.Categories, v.Category)
+		validFilters.Cuisines = append(validFilters.Cuisines, v.Cuisine)
+	}
+	response, err := json.Marshal(validFilters)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(response)
+}

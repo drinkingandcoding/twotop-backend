@@ -24,6 +24,7 @@ func main() {
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("welcome"))
 	})
+	r.Get("/filters", routes.GetFilters)
 	r.Mount("/recipes", routes.RecipeResource{}.Routes())
 
 	db, err := database.Connect()
